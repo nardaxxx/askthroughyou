@@ -1,1 +1,85 @@
+Ask Through You Network License — v1.0
 
+Copyright (c) 2025 Giovanni Nardacci (nardaxxx)
+
+---
+
+Permission
+
+You are free to:
+
+* Use this software for any purpose
+* Copy and distribute this software
+* Modify and improve the code
+* Run this software on any machine or network
+* Study and adapt the protocol
+
+This software is open and free.
+
+---
+
+Condition for Network Participation
+
+To participate in the Ask Through You network, you must be registered in the official network registry.
+
+Registration requires:
+
+* A valid node identity
+* Acceptance of network rules
+* Payment of the network fee (when enforced)
+
+The official registry will be deployed on a decentralized infrastructure (e.g., Ethereum / Decentraland or equivalent).
+
+There is only one official Ask Through You network.
+
+---
+
+Network Authority
+
+The only valid network registry is the official Ask Through You smart contract once deployed.
+
+Until decentralization is fully implemented, temporary bootstrap systems (such as GitHub or centralized servers) may be used for testing and initial deployment.
+
+These temporary systems do not represent the final authority of the network.
+
+---
+
+Fees and Authenticity
+
+* Payments are valid only if sent to the official Ask Through You contract
+* No third party is authorized to collect fees on behalf of the network
+* Any registry or system claiming to be Ask Through You outside the official contract is not part of the network
+
+---
+
+Disclaimer
+
+This software is provided "as is", without warranty of any kind.
+
+The network does not guarantee:
+
+* Correctness of responses
+* Trustworthiness of nodes
+* Availability of service
+* Privacy or anonymity
+
+Nodes are operated by independent users.
+They may return incorrect, filtered, or manipulated data.
+
+Ask Through You is designed for observation, comparison, and distributed communication — not blind trust.
+
+---
+
+Philosophy
+
+You do not ask directly.
+You ask through someone else.
+
+The answer you receive is the answer their network sees.
+
+The protocol is open.
+The network is one.
+
+---
+
+End of License
