@@ -55,6 +55,51 @@ except ImportError:
     sys.exit(1)
 
 
+# ================= .env =================
+
+def load_dotenv_file(filename: str = ".env") -> None:
+    """
+    Carica automaticamente variabili ambiente da un file .env
+    nella cartella corrente del programma.
+    Non sovrascrive variabili già presenti.
+    """
+    env_path = Path(filename)
+    if not env_path.exists():
+        return
+
+    try:
+        for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+
+            if not line:
+                continue
+            if line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip()
+
+            if not key:
+                continue
+
+            if len(value) >= 2 and (
+                (value.startswith('"') and value.endswith('"')) or
+                (value.startswith("'") and value.endswith("'"))
+            ):
+                value = value[1:-1]
+
+            os.environ.setdefault(key, value)
+
+    except Exception as e:
+        print(f"Attenzione: impossibile leggere {filename}: {e}")
+
+
+load_dotenv_file()
+
+
 # ================= LOG =================
 
 logging.basicConfig(
@@ -228,8 +273,6 @@ def load_dns_cache() -> None:
             dns_cache = raw
     except Exception as e:
         log.warning("Impossibile leggere DNS cache: %s", e)
-
-
 # ================= GEO + IP =================
 
 def get_public_ip() -> Optional[str]:
@@ -457,8 +500,6 @@ def keepalive_to_server(geo: dict[str, str]) -> bool:
     except Exception as e:
         log.warning("Errore keepalive centralino: %s", e)
         return False
-
-
 # ================= DNS =================
 
 def resolve_dns(domain: str, qtype: str) -> tuple[list[str], int]:
@@ -700,8 +741,6 @@ def start_node_server() -> None:
             server.close()
         except Exception:
             pass
-
-
 # ================= DOH SERVER =================
 
 class DoHHandler(BaseHTTPRequestHandler):
