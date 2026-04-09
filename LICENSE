@@ -1,1 +1,192 @@
-All rights reserved — © Giovanni Nardacci
+Ask Through You Network License
+Version 1.0
+Copyright (c) 2025 Giovanni Nardacci (nardaxxx)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PREAMBLE
+
+This software was created by a single person to solve a real problem:
+the internet is not the same everywhere, and when infrastructure fails,
+people lose the ability to communicate.
+
+This license protects the work while keeping it free for individuals,
+researchers, and humanitarian organizations. It prevents commercial
+exploitation without contribution, and protects the identity of the
+official network.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DEFINITIONS
+
+"Software" means the Ask Through You source code, documentation,
+and all associated files in this repository.
+
+"Author" means Giovanni Nardacci, the original creator.
+
+"You" means any individual or organization using, copying, modifying,
+or distributing this Software.
+
+"Commercial Use" means any use of the Software, or a derivative of it,
+primarily intended for commercial advantage or monetary compensation.
+This includes selling access, offering paid services, embedding in a
+commercial product, or using the Software to generate revenue directly
+or indirectly.
+
+"Official Network" means the Ask Through You peer network whose
+registry is anchored in the official smart contract on Ethereum,
+as published by the Author.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. FREE USE
+
+You are free to:
+
+a) Run this Software on any personal device for personal use.
+
+b) Study, learn from, and modify it for personal use.
+
+c) Share unmodified copies of this Software, provided this license
+   is included in full.
+
+d) Run a bootstrap server for the official Ask Through You network,
+   contributing to the community.
+
+e) Use this Software in academic research, provided the Author is
+   credited in any publication.
+
+f) Use this Software in humanitarian operations — including disaster
+   response, conflict zones, and civilian protection scenarios —
+   at no cost, provided that:
+
+   1. Any public communication, report, or deployment documentation
+      acknowledges Human Flag (https://humanflag.org) as the
+      originating humanitarian project.
+
+   2. The user accepts and commits to uphold the values of Human Flag:
+      the protection of civilians from autonomous weapons systems,
+      the promotion of visual surrender protocols, and the facilitation
+      of safe surrender and communication between civilians and armed
+      actors in conflict zones.
+
+   3. The user agrees to actively support, and not obstruct, the
+      ability of civilians to signal surrender and non-combatant
+      status, consistent with international humanitarian law.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. WHAT REQUIRES WRITTEN PERMISSION
+
+The following uses require explicit written authorization from the Author:
+
+a) Any Commercial Use of the Software or a derivative of it.
+
+b) Embedding this Software, or any substantial portion of it, into
+   a product or service distributed to third parties.
+
+c) Creating a competing network that uses this Software's protocol
+   or code and presents itself as an alternative to the Official Network.
+
+d) Removing or replacing the Author's attribution in any public-facing
+   version of the Software.
+
+To request authorization, contact the Author via the official repository.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. ATTRIBUTION — ALWAYS REQUIRED
+
+Any distribution of this Software, modified or unmodified, must:
+
+a) Retain this license file in full.
+
+b) Clearly state the original Author's name: Giovanni Nardacci (nardaxxx).
+
+c) Link to the original repository:
+   https://github.com/nardaxxx/askthroughyou
+
+d) If the Software is modified, clearly state what was changed and
+   that it is a derivative of the original work.
+
+Removing, hiding, or obscuring attribution is not permitted under
+any circumstance.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. THE OFFICIAL NETWORK
+
+The Official Network is identified by its Ethereum smart contract
+registry, to be published by the Author.
+
+You may not claim that a network you operate is the Official Network,
+or operate a registry that impersonates the Official Network.
+
+The protocol is open. The network is one.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. CONTRIBUTIONS
+
+If you submit contributions to this repository, you agree that:
+
+a) Your contribution is your original work.
+
+b) The Author may include it in the Software under this license.
+
+c) You retain copyright to your contribution, but grant the Author
+   a perpetual, irrevocable license to use it.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7. NO WARRANTY
+
+This Software is provided "as is", without warranty of any kind.
+The Author is not responsible for correctness of DNS responses,
+data transmitted through the network, or any damages arising from use.
+You are responsible for ensuring your use complies with the laws
+of your country.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8. ENFORCEMENT
+
+Violation of this license — particularly unauthorized commercial use,
+removal of attribution, or humanitarian use that contradicts the values
+of Human Flag — terminates your rights immediately and without notice.
+
+The Author reserves the right to:
+
+a) Demand immediate cessation of use upon violation.
+
+b) Claim financial damages and compensation for any commercial benefit
+   obtained through unauthorized use of this Software.
+
+c) Pursue legal remedies in any jurisdiction where this Software
+   is used, with the assistance of legal counsel and partner
+   organizations.
+
+d) Publicly disclose violations, including the identity of the
+   violating party, as permitted by applicable law.
+
+Ignorance of this license is not a defense.
+Use of this Software implies acceptance of all terms.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SUMMARY (not legally binding)
+
+✓  Personal use — free
+✓  Research — free with attribution
+✓  Humanitarian use — free, with Human Flag acknowledgment and values
+✗  Commercial use — requires written permission
+✗  Removing attribution — never allowed
+✗  Claiming to be the Official Network — never allowed
+✗  Violating Human Flag values in humanitarian contexts — license terminated
+
+The code is free.
+The network is one.
+The door is on the blockchain.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
