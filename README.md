@@ -1,9 +1,3 @@
-Vai su GitHub, apri la repo `askthroughyou`, clicca su `README.md`, poi clicca la matita (Edit).
-
-Cancella tutto quello che c'è e incolla questo:
-
----
-
 # Ask Through You
 
 **Ask the internet through someone else.**
@@ -207,6 +201,3 @@ The code is free.
 The network is one.
 The door is on the blockchain.
 
----
-
-Fatto? Poi passiamo a LICENSE.
