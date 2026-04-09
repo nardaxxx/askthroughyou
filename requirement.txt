@@ -1,4 +1,10 @@
-Flask
-requests
+# Ask Through You — dependencies
+# Install with: pip install -r requirements.txt
+
+# Node (askthroughyou.py)
 dnslib
 dnspython
+
+# Bootstrap server (askthroughyou_server.py)
+flask
+requests
