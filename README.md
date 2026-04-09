@@ -380,26 +380,31 @@ Ask Through You is developed alongside [Human Flag](https://humanflag.org), a Sw
 
 ## License
 
-**Ask Through You Network License — v1.0**
+**Ask Through You Network License — v1.0**  
+Copyright (c) 2025 Giovanni Nardacci (nardaxxx)
+
+**Free for:**
+- Personal use
+- Academic research (with attribution)
+- Humanitarian operations — disaster response, conflict zones, civilian protection — always free, no restrictions
+
+**Requires written permission from the Author:**
+- Any commercial use
+- Embedding in a product or service distributed to third parties
+- Creating a competing network using this code or protocol
+
+**Always required:**
+- Attribution — the Author's name must appear in any distribution
+- Link to original repository: https://github.com/nardaxxx/askthroughyou
+
+**The Official Network:**  
+The official Ask Through You network is identified by its Ethereum smart contract registry, published by the Author. No one may claim to operate the Official Network except the Author.
+
+See the [LICENSE](LICENSE) file for full terms.
 
 The code is free.  
 The network is one.  
 The door is on the blockchain.
-
-You are free to:
-
-- Use, copy, share, and distribute this software
-- Run it on any machine
-- Modify and improve the code
-- Contribute to the official repository
-
-With one condition:
-
-To participate in the official Ask Through You network, you must be registered in the official registry. Registration requires payment of the network fee via the official smart contract on Ethereum.
-
-The code is free. The network has one door. You pay once to enter.
-
-Any registry claiming to be the official Ask Through You network, other than the official Ethereum contract, is not the official network.
 
 ---
 
