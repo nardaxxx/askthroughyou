@@ -1,0 +1,47 @@
+# Ask Through You — Node Configuration
+# Copy this file to .env and fill in your values
+# Never commit .env to GitHub
+
+# ── BOOTSTRAP ──────────────────────────────────────────
+# URL of your bootstrap server (optional — leave empty if not using one)
+ATY_SERVER_URL=
+
+# Comma-separated peer list URLs (at least one required)
+ATY_BOOTSTRAP_URLS=https://raw.githubusercontent.com/nardaxxx/askthroughyou_peers/main/peers.json
+
+# ── NODE IDENTITY ───────────────────────────────────────
+# A name for your node (optional)
+ATY_NODE_ID=my-node
+
+# ── PORTS ───────────────────────────────────────────────
+# TCP port for peer-to-peer communication
+ATY_LISTEN_PORT=35353
+
+# Local DNS-over-HTTPS endpoint port
+ATY_DOH_PORT=53535
+
+# ── TIMEOUTS ────────────────────────────────────────────
+ATY_CONNECT_TIMEOUT=5
+ATY_HTTP_TIMEOUT=10
+ATY_DNS_TIMEOUT=3.0
+ATY_DNS_LIFETIME=5.0
+
+# ── INTERVALS (seconds) ─────────────────────────────────
+ATY_KEEPALIVE_INTERVAL=120
+ATY_DISCOVERY_INTERVAL=180
+ATY_REFRESH_INTERVAL=300
+
+# ── LIMITS ──────────────────────────────────────────────
+ATY_MAX_PEER_AGE=900
+ATY_MAX_MESSAGE_SIZE=65536
+
+# ── SERVER ONLY (askthroughyou_server.py) ───────────────
+# Fill these only if you are running a bootstrap server
+GITHUB_TOKEN=
+ATY_REPO_OWNER=
+ATY_REPO_NAME=askthroughyou_peers
+ATY_SERVER_PORT=8090
+ATY_REQUEST_TIMEOUT=15
+
+
+Fatto? Poi `requirements.txt` — l'ultimo.
