@@ -16,12 +16,17 @@ Designed for:
 
 from __future__ import annotations
 
+# Load .env FIRST before anything else reads os.getenv
+from dotenv import load_dotenv
+load_dotenv()
+
 import base64
 import json
 import logging
 import os
 import threading
 import time
+import urllib.request
 from typing import Any, Optional
 
 from flask import Flask, jsonify, request
@@ -65,6 +70,23 @@ repo_lock = threading.Lock()
 
 # ================= HELPERS =================
 
+def get_public_ip() -> str:
+    """Ask an external service what our public IP is."""
+    for url in [
+        "https://api.ipify.org",
+        "https://ifconfig.me/ip",
+    ]:
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "AskThroughYou/1.0"})
+            with urllib.request.urlopen(req, timeout=5) as r:
+                ip = r.read().decode("utf-8").strip()
+                if ip:
+                    return ip
+        except Exception:
+            continue
+    return ""
+
+
 def github_headers() -> dict[str, str]:
     headers = {
         "Accept": "application/vnd.github+json",
@@ -103,13 +125,6 @@ def sanitize_node_id(value: Any) -> str:
 
 def normalize_ip(value: Any) -> str:
     return str(value or "").strip()
-
-
-def get_client_ip() -> str:
-    forwarded = request.headers.get("X-Forwarded-For", "")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    return normalize_ip(request.remote_addr)
 
 
 def require_api_token() -> Optional[tuple[Any, int]]:
@@ -179,7 +194,6 @@ def build_peer_entry(ip: str, payload: dict[str, Any]) -> dict[str, Any]:
     node_id = sanitize_node_id(payload.get("node_id"))
     if node_id:
         entry["node_id"] = node_id
-    # optional fields
     for key in ("country", "region", "city", "org", "asn"):
         value = str(payload.get(key, "") or "").strip()
         if value:
@@ -218,6 +232,7 @@ def health():
         "service": APP_NAME,
         "version": APP_VERSION,
         "github_ready": github_ready(),
+        "repo_owner": REPO_OWNER or "-",
     })
 
 
@@ -248,9 +263,12 @@ def register():
             return auth_error
         if not github_ready():
             return jsonify({"ok": False, "error": "SERVER_NOT_CONFIGURED"}), 500
-        client_ip = get_client_ip()
+
+        client_ip = get_public_ip()
         if not client_ip:
-            return jsonify({"ok": False, "error": "NO_IP"}), 400
+            log.error("Cannot determine public IP")
+            return jsonify({"ok": False, "error": "CANNOT_DETERMINE_PUBLIC_IP"}), 500
+
         payload = request.get_json(silent=True) or {}
         entry = build_peer_entry(client_ip, payload)
         with repo_lock:
@@ -279,9 +297,12 @@ def keepalive():
             return auth_error
         if not github_ready():
             return jsonify({"ok": False, "error": "SERVER_NOT_CONFIGURED"}), 500
-        client_ip = get_client_ip()
+
+        client_ip = get_public_ip()
         if not client_ip:
-            return jsonify({"ok": False, "error": "NO_IP"}), 400
+            log.error("Cannot determine public IP")
+            return jsonify({"ok": False, "error": "CANNOT_DETERMINE_PUBLIC_IP"}), 500
+
         payload = request.get_json(silent=True) or {}
         entry = build_peer_entry(client_ip, payload)
         with repo_lock:
@@ -323,10 +344,50 @@ def cleanup():
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+# ================= AUTO KEEPALIVE =================
+
+KEEPALIVE_INTERVAL = int(os.getenv("ATY_KEEPALIVE_INTERVAL", "840"))  # 14 min default
+
+def auto_keepalive() -> None:
+    """Background thread: keepalive every 14 minutes."""
+    time.sleep(5)  # wait for Flask to start
+    while True:
+        try:
+            public_ip = get_public_ip()
+            if public_ip and github_ready():
+                node_id = os.getenv("ATY_NODE_ID", "node-001").strip()
+                country_code = os.getenv("ATY_COUNTRY_CODE", "CH").strip()
+                port = int(os.getenv("ATY_LISTEN_PORT", "35353"))
+                entry = build_peer_entry(public_ip, {
+                    "port": port,
+                    "country_code": country_code,
+                    "node_id": node_id,
+                })
+                with repo_lock:
+                    peers_list, sha = load_peers_from_github()
+                    peers_list = cleanup_peers(peers_list)
+                    peers_list = upsert_peer(peers_list, entry)
+                    save_peers_to_github(peers_list, sha, f"keepalive {public_ip}:{port}")
+                log.info("AUTO-KEEPALIVE %s:%s %s", public_ip, port, country_code)
+            else:
+                log.warning("AUTO-KEEPALIVE skipped: not ready")
+        except Exception as e:
+            log.error("AUTO-KEEPALIVE error: %s", e)
+        time.sleep(KEEPALIVE_INTERVAL)
+
+
 # ================= MAIN =================
 
 if __name__ == "__main__":
     log.info("%s v%s", APP_NAME, APP_VERSION)
     log.info("Listening on %s:%d", HOST, PORT)
     log.info("GitHub repo: %s/%s", REPO_OWNER or "-", REPO_NAME or "-")
+
+    t = threading.Thread(target=auto_keepalive, daemon=True)
+    t.start()
+    log.info("Auto-keepalive started (every %ds)", KEEPALIVE_INTERVAL)
+
     app.run(host=HOST, port=PORT, debug=False)
+
+
+# ================= AUTO KEEPALIVE =================
