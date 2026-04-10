@@ -2,202 +2,189 @@
 
 **Ask the internet through someone else.**
 
-Ask Through You is a distributed human-node network where real users resolve DNS queries for each other. When you use it, you see the internet as another person — on another network, in another country — sees it.
+A distributed human-node DNS network. Every user is simultaneously a client and a node. DNS queries are routed through real users in chosen countries, exposing geographic and ISP-level DNS inconsistencies.
 
-You are not using a VPN.
-You are not using a public resolver.
-You are asking through someone else.
+No central server. No logs. No surveillance.
 
 ---
 
-## Why This Exists
+## How it works
 
-The internet is not the same everywhere.
-
-DNS responses change depending on country, ISP, network policies, filtering systems, and CDN geolocation. Governments and ISPs block content. Censorship is invisible — you just get an error, or nothing.
-
-Ask Through You makes those differences visible, using real users as resolution points.
-
-It also works when infrastructure fails. In war zones, natural disasters, or network blackouts, central services go down. WhatsApp dies when Meta's servers are unreachable, or when no one can pay a phone bill. Ask Through You only needs two nodes that can see each other — on a LAN, a local WiFi, a mesh network, or any IP connection.
-
-This is not theoretical. It is the gap this project was built to fill.
+- Each node registers itself on a public peer list (GitHub Pages)
+- Clients read the peer list and choose a country
+- DNS queries are routed through a peer in that country
+- The peer resolves the query locally and returns the result
+- The network is invisible — traffic looks like normal DNS
 
 ---
 
-## What It Does
+## Components
 
-- Resolve DNS from another country
-- Compare DNS results across networks
-- Detect filtering, censorship, or manipulation
-- Observe CDN geolocation behavior
-- Debug region-specific issues
-- Communicate when central infrastructure is unavailable
-
----
-
-## How It Works
-
-Every user who runs the program becomes a node. Every node is both a client and a server.
-
-When you run `askthroughyou.py --country DE`, your DNS queries are sent to a real user in Germany, resolved using their network's DNS, and returned to you. You see what Germany sees.
-
-At the same time, other users can resolve queries through your node. You contribute your network perspective to the network.
+| File | Role |
+|------|------|
+| `askthroughyou.py` | User node — client + DNS relay |
+| `askthroughyou_server.py` | Bootstrap server — manages peer registry on GitHub |
+| `.env` | Configuration (never commit this file) |
 
 ---
 
-## Quick Start
+## Quick Start — User Node
 
 ### Requirements
 
-- Python 3.8 or higher
-- pip
-
-### Install
-
-```bash
-git clone https://github.com/nardaxxx/askthroughyou.git
-cd askthroughyou
-pip install dnslib dnspython
 ```
-
-### Configure
-
-Copy `.env.example` to `.env` and edit it:
-
-```bash
-cp .env.example .env
+pip install dnspython dnslib
 ```
 
 ### Run
 
-List available countries:
-
 ```bash
-python3 askthroughyou.py --list
+# Show available countries
+python askthroughyou.py --list
+
+# Connect via a specific country
+python askthroughyou.py --country CH
 ```
 
-Start resolving DNS through a specific country:
-
-```bash
-python3 askthroughyou.py --country DE
-```
-
-### Configure Your Browser
-
-Point your browser to the local DoH endpoint:
+### DNS endpoint (once running)
 
 ```
 http://127.0.0.1:53535/dns-query
 ```
 
-**Brave / Chrome:** Settings → Privacy and security → Security → Use secure DNS → Custom
-**Firefox:** Settings → Network Settings → Enable DNS over HTTPS → Custom
+Configure this as your DNS-over-HTTPS provider in your browser or OS.
 
-### Test
+### Status page
 
-```bash
-curl "http://127.0.0.1:53535/dns-query?name=example.com&type=A"
-curl "http://127.0.0.1:53535/status"
+```
+http://127.0.0.1:53535/status
 ```
 
 ---
 
-## Running a Bootstrap Server
+## Quick Start — Bootstrap Server (Synology NAS / Linux)
 
-If you have a machine always on (Synology NAS, Raspberry Pi, VPS, home server), you can run a bootstrap server and contribute to the network infrastructure.
+The bootstrap server runs on your always-on machine. It manages the peer registry and writes it to GitHub automatically.
 
 ### Requirements
 
-- Python 3.8+
-- `pip install flask requests`
-- GitHub personal access token with `repo` scope
-- GitHub repository (e.g. `youruser/askthroughyou_peers`) with a `peers.json` file containing `[]`
+```
+pip install flask requests python-dotenv
+```
 
-### Configure
+### Configuration — `.env`
 
-Copy `.env.example` to `.env` and fill in the server variables. Never commit `.env` to GitHub.
+Create a `.env` file in the same folder as `askthroughyou_server.py`:
+
+```
+# GitHub — required for peer registry
+GITHUB_TOKEN=ghp_yourtoken
+ATY_REPO_OWNER=yourusername
+ATY_REPO_NAME=askthroughyou_peers
+ATY_BRANCH=main
+ATY_FILE_PATH=peers.json
+
+# Server
+ATY_SERVER_HOST=0.0.0.0
+ATY_SERVER_PORT=8090
+
+# Node
+ATY_NODE_ID=node-001
+ATY_COUNTRY_CODE=CH
+ATY_LISTEN_PORT=35353
+
+# Timing
+ATY_KEEPALIVE_INTERVAL=120
+ATY_MAX_PEER_AGE=900
+ATY_REQUEST_TIMEOUT=15
+```
+
+**Never commit `.env` to GitHub.** Add it to `.gitignore`.
 
 ### Run
 
 ```bash
-export $(cat .env | xargs)
-python3 askthroughyou_server.py
+python askthroughyou_server.py &
 ```
 
-Run in background:
+### What the server does automatically
+
+- Reads its own public IP via `ipify.org` and `ifconfig.me` — no manual configuration needed
+- Registers itself on the peer list at startup
+- Sends keepalive to GitHub every `ATY_KEEPALIVE_INTERVAL` seconds (default: 120s)
+- Cleans up stale peers older than `ATY_MAX_PEER_AGE` seconds (default: 900s = 15 min)
+
+### API endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Server status and GitHub connectivity |
+| `/peers` | GET | Current peer list |
+| `/register` | POST | Register a new node |
+| `/keepalive` | POST | Update node timestamp |
+| `/cleanup` | POST | Remove stale peers |
+
+### Register manually (optional)
 
 ```bash
-export $(cat .env | xargs) && nohup python3 askthroughyou_server.py > server.log 2>&1 &
+curl -X POST http://localhost:8090/register \
+  -H "Content-Type: application/json" \
+  -d '{"port":35353,"country_code":"CH","node_id":"node-001"}'
 ```
 
-### Verify
+---
+
+## Peer list (public)
+
+The peer list is published as a public JSON file via GitHub Pages:
+
+```
+https://yourusername.github.io/askthroughyou_peers/peers.json
+```
+
+To enable GitHub Pages on the `askthroughyou_peers` repo:
+- Settings → Pages → Source: main branch → Save
+
+---
+
+## Client `.env` (optional)
+
+```
+ATY_SERVER_URL=http://your-nas-ip:8090
+ATY_BOOTSTRAP_URLS=https://yourusername.github.io/askthroughyou_peers/peers.json
+ATY_NODE_ID=node-001
+ATY_LISTEN_PORT=35353
+ATY_DOH_PORT=53535
+ATY_CONNECT_TIMEOUT=5
+ATY_HTTP_TIMEOUT=10
+ATY_KEEPALIVE_INTERVAL=120
+ATY_DISCOVERY_INTERVAL=180
+ATY_REFRESH_INTERVAL=300
+ATY_MAX_PEER_AGE=900
+ATY_MAX_MESSAGE_SIZE=65536
+ATY_DNS_TIMEOUT=3.0
+ATY_DNS_LIFETIME=5.0
+```
+
+---
+
+## Android (Termux)
 
 ```bash
-curl http://your-server-ip:8090/health
+pkg install python
+pip install dnspython dnslib
+curl -O https://raw.githubusercontent.com/yourusername/askthroughyou/main/askthroughyou.py
+python askthroughyou.py --list
 ```
-
-### Add Your Bootstrap to the Network
-
-Once running, share your peer list URL. Others add it to their `ATY_BOOTSTRAP_URLS`:
-
-```
-ATY_BOOTSTRAP_URLS=https://raw.githubusercontent.com/nardaxxx/askthroughyou_peers/main/peers.json,https://raw.githubusercontent.com/youruser/askthroughyou_peers/main/peers.json
-```
-
-Multiple URLs are fetched in parallel. If one fails, the others keep the network alive.
-
----
-
-## Off-Grid Operation
-
-Ask Through You works without central infrastructure.
-
-If bootstrap servers are unreachable, the node uses its local peer cache. If the internet is down, nodes can still communicate over LAN, local WiFi, mesh networks, or any IP connection between them.
-
-The network exists as long as nodes can reach each other. No server required. No account required. No internet required — only IP connectivity between peers.
-
-This makes it relevant for censored networks, disaster scenarios, war zones, and any situation where communication must survive without institutions.
-
----
-
-## Threat Model
-
-Ask Through You does NOT guarantee anonymity, censorship resistance, or correctness of responses. Nodes are operated by real people who may return incorrect data.
-
-This system is for observation and resilience, not for blind trust. Use Tor or a trusted VPN if you need anonymity.
-
----
-
-## Roadmap
-
-**Stage 1 — Current:** functional node, bootstrap server, GitHub peer registry, local DoH, peer and DNS cache.
-
-**Stage 2:** single-file executable (.exe), multi-peer verification, offline-first cache.
-
-**Stage 3:** blockchain registry, cryptographic node identity, trust scoring.
-
-**Stage 4:** text messaging between nodes, store-and-forward for disconnected scenarios, mesh and radio network operation.
-
----
-
-## Related Project
-
-Ask Through You is developed alongside [Human Flag](https://humanflag.org), a Swiss non-profit working on civilian protection protocols for autonomous weapons systems. The resilient communication layer built here is directly relevant to scenarios where civilians need to communicate when infrastructure has been destroyed or captured.
 
 ---
 
 ## License
 
-**Ask Through You Network License — v1.0**
-Copyright (c) 2025 Giovanni Nardacci (nardaxxx)
+DPNN Network License v1.0 — code is free, network participation requires registration.
 
-Free for personal use, academic research (with attribution), and humanitarian operations — with acknowledgment of [Human Flag](https://humanflag.org) and acceptance of its values: civilian protection, visual surrender protocols, and facilitation of safe surrender under international humanitarian law.
+---
 
-Commercial use, embedding in products, and creating competing networks require written permission from the Author.
+## Project
 
-Attribution is always required. See [LICENSE](LICENSE) for full terms.
-
-The code is free.
-The network is one.
-The door is on the blockchain.
-
+Part of the Ask Through You initiative — restoring DNS universality, not bypassing censorship.
