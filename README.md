@@ -181,7 +181,9 @@ python askthroughyou.py --list
 
 ## License
 
-DPNN Network License v1.0 — code is free, network participation requires registration.
+Ask Through You Network License v1.0 — code is free, commercial use requires written permission, humanitarian use is free with Human Flag acknowledgment.
+
+See `LICENSE` file for full terms.
 
 ---
 
