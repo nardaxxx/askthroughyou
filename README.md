@@ -330,7 +330,7 @@ Returns:
 ```json
 {
   "clients": {
-    "93.36.227.198": {
+    "10.10.10.1": {
       "connections": 1,
       "first_seen": 1775912918,
       "last_seen": 1775912918
