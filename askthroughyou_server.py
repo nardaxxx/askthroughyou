@@ -354,9 +354,6 @@ def handle_peer(conn: socket.socket, addr: tuple[str, int]) -> None:
             # Resolve locally
             import dns.resolver
             resolver = dns.resolver.Resolver()
-            dns_server = os.getenv("ATY_DNS_SERVER", "").strip()
-            if dns_server:
-                resolver.nameservers = [dns_server]
             resolver.timeout = 3.0
             resolver.lifetime = 5.0
             try:
